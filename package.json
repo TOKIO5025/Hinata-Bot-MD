@@ -19,7 +19,7 @@
   "homepage": "https://github.com/TOKIO5025/Hinata-Bot-MD#readme",
   "dependencies": {
     "@bochilteam/scraper": "^5.0.1",
-    "@whiskeysockets/baileys": "npm:@izumi-xyz/meta",
+    "@whiskeysockets/baileys": "github:ds6/meta",
     "adm-zip": "0.5.16",
     "awesome-phonenumber": "^7.2.0",
     "axios": "^1.7.9",
