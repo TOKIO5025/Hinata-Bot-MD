@@ -68,7 +68,7 @@ const handler = async (m, { conn, text, command }) => {
           renderLargerThumbnail: false // true para otra cosa xd 
         }
       }
-    }, { quoted: fkontak });
+    }, { quoted:});
     
     //await conn.sendMessage(m.chat, { audio: { url: json.download }, fileName: `${json.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: fkontak })
 
