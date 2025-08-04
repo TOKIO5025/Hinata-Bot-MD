@@ -1,20 +1,56 @@
-import fetch from 'node-fetch'
+import { igdl } from 'ruhend-scraper';
 
-let handler = async (m, { args, command, conn }) => {
-  if (!args[0]) throw `*Uso correcto: .${command} <enlace de Facebook>*`
+const handler = async (m, { text, conn, args, usedPrefix, command }) => {
+  if (!args[0]) {
+    return conn.reply(m.chat, `*🌪️ Por favor, ingresa un link de Facebook.*`, fkontak, m);
+  }
 
-  const res = await fetch(`https://eliasar-yt-api.vercel.app/api/facebookdl?link=${encodeURIComponent(args[0])}`)
-  if (!res.ok) throw `*Error al contactar con la API*`
+  await m.react('🕒');
+  let res;
+  try {
+    res = await igdl(args[0]);
+  } catch (error) {
+    return conn.reply(m.chat, '*❌ Error al obtener el video, verifique que el enlace sea correcto*', m);
+  }
 
-  const json = await res.json()
-  if (!json.status || !json.data || !json.data.length) throw '*No se pudo obtener el video.*'
+  let result = res.data;
+  if (!result || result.length === 0) {
+    return conn.reply(m.chat, '*⚠️ No se encontraron resultados.*', m);
+  }
 
-  let video = json.data[0].url
-  await conn.sendFile(m.chat, video, 'facebook.mp4', '✅ *Aquí tienes tu video de Facebook*', m)
-}
+  let data;
+  try {
+    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
+  } catch (error) {
+    return conn.reply(m.chat, '*❌ Error al enviar el video de Facebook*', m);
+  }
 
-handler.help = ['facebook', 'fb'].map(v => v + ' <enlace>')
-handler.tags = ['downloader']
-handler.command = ['fb', 'facebook']
+  if (!data) {
+    return conn.reply(m.chat, '*⚠️ No se encontró una resolución adecuada.*', m);
+  }
 
-export default handler
+  await m.react('✅');
+  let video = data.url;
+
+  try {
+    await conn.sendMessage(
+      m.chat,
+      {
+        video: { url: video },
+        caption: `\`\`\`◜Facebook - Download◞\`\`\`\n\n> 🏞️ *Calidad:* ${data.resolution}\n> ☄️ *Enlace:* ${args[0]}\n\n⟢🌲 Aquí tienes: 🌪️\n⟢🏞️ ¡Disfruta!`,
+        fileName: 'fb.mp4',
+        mimetype: 'video/mp4'
+      },
+      { quoted: fkontak }
+    );
+  } catch (error) {
+    await m.react('❌');
+    return conn.reply(m.chat, '*👻 La URL está corrupta, intenta con otra URL.*', m);
+  }
+};
+
+handler.help = ['facebook'];
+handler.tags = ['descargas'];
+handler.command = ['facebook', 'fb'];
+
+export default handler;
