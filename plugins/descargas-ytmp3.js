@@ -1,25 +1,23 @@
-import fetch from 'node-fetch';
-import yts from 'yt-search';
+import fetch from 'node-fetch'
+import yts from 'yt-search'
 
 const handler = async (m, { conn, text, command }) => {
   try {
     if (!text) {
-      return conn.reply(m.chat, `╭━━⬣『 𝙔𝙊𝙐𝙏𝙐𝘽𝙀 𝙇𝙄𝙉𝙆 』⬣━━╮
-┃⛩️ 𝙄𝙣𝙜𝙧𝙚𝙨𝙖 𝙪𝙣 𝙚𝙣𝙡𝙖𝙘𝙚 𝙙𝙚 𝙔𝙤𝙪𝙏𝙪𝙗𝙚 🌲
-╰━━━〔 🌀 Hinata 𝘽𝙊𝙏 〕━━⬣`, m,);
+      return conn.reply(m.chat, `🍓 *Dime el link o el nombre de la canción, mi amor...*\n\nEjemplo: .ytmp3 <nombre o link>`, m);
     }
 
-    await conn.sendMessage(m.chat, { react: { text: '⏱️', key: m.key } });
+    await conn.sendMessage(m.chat, { react: { text: '🔍', key: m.key } });
 
     const search = await yts(text);
-    const video = search.videos[0];
-    if (!video) {
-      return conn.reply(m.chat, '❌ No se encontraron resultados para tu búsqueda.', m);
-    }
+    const video = search.videos?.[0];
+    if (!video) throw new Error('No encontré nada, mi cielo 😿');
 
     const { title, timestamp, views, ago, url, author, thumbnail } = video;
     const canal = author?.name || 'Desconocido';
-    const vistas = views.toLocaleString();
+    const vistas = views?.toLocaleString() || '???';
+
+    const thumbnailBuffer = await (await fetch(thumbnail)).buffer();
 
     const textoInfo = `⬣ *🎲  \`YOUTUBE - MP3\` 🇦🇱* ⬣\n\n`
       + `> 🌾 *𝑻𝒊𝒕𝒖𝒍𝒐:* ${title}\n`
@@ -28,9 +26,7 @@ const handler = async (m, { conn, text, command }) => {
       + `> 🌧️ *𝑽𝒊𝒔𝒕𝒂𝒔:* ${vistas}\n`
       + `> 🌳 *𝑷𝒖𝒃𝒍𝒊𝒄𝒂𝒅𝒐:* ${ago}\n`
       + `> 🔗 *𝑳𝒊𝒏𝒌:* ${url}\n\n`
-      + `*➭ 𝑬𝒍 𝒂𝒖𝒅𝒊𝒐 𝒔𝒆 𝒆𝒔𝒕𝒂 𝒆𝒏𝒗𝒊𝒂𝒏𝒅𝒐, 𝑬𝒔𝒑𝒆𝒓𝒆 𝒖𝒏 𝒎𝒐𝒎𝒆𝒏𝒕𝒊𝒕𝒐~ 🌸*`;
-
-    const thumbnailBuffer = await (await fetch(thumbnail)).buffer();
+      + `*➭ 𝑬𝒍 𝒂𝒖𝒅𝒊𝒐 𝒍𝒍𝒆𝒈𝒐, 𝒔𝒊𝒆𝒏𝒕𝒆 𝒆𝒍 𝒑𝒓𝒐𝒍𝒐𝒏𝒈𝒆 𝒄𝒐𝒏 𝒉𝒊𝒏𝒂𝒕𝒂~ 🌸*`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnailBuffer,
@@ -45,13 +41,11 @@ const handler = async (m, { conn, text, command }) => {
       }
     }, { quoted: m });
 
-    const api = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${url}`;
+    const api = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(url)}`;
     const res = await fetch(api);
     const json = await res.json();
 
-    if (!json || !json.status || !json.download) {
-      throw new Error('⚠️ No se pudo generar el enlace de descarga.');
-    }
+    if (!json?.status || !json?.download) throw new Error('No pude sacar el audio, mi rey 😢');
 
     await conn.sendMessage(m.chat, {
       audio: { url: json.download },
@@ -65,12 +59,10 @@ const handler = async (m, { conn, text, command }) => {
           thumbnail: thumbnailBuffer,
           mediaUrl: url,
           sourceUrl: url,
-          renderLargerThumbnail: false // true para otra cosa xd 
+          renderLargerThumbnail: false
         }
       }
-    }, { quoted:});
-    
-    //await conn.sendMessage(m.chat, { audio: { url: json.download }, fileName: `${json.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: fkontak })
+    }, { quoted: m }); // Aquí está la corrección
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 
