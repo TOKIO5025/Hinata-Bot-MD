@@ -1,56 +1,53 @@
+// 📥 Comando .facebook – Hinata Bot 💋
+// 💀 TOKIO5025 – github.com/TOKIO5025/Hinata-Bot-MD
+
 import { igdl } from 'ruhend-scraper';
 
-const handler = async (m, { text, conn, args, usedPrefix, command }) => {
+let handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
-    return conn.reply(m.chat, `*🌪️ Por favor, ingresa un link de Facebook.*`, fkontak, m);
+    return conn.reply(m.chat, `🥵 *¿Dónde está el link, bebé?*\n\nUsa así:\n${usedPrefix + command} https://www.facebook.com/...`, m);
   }
 
-  await m.react('🕒');
+  await m.react('🌀');
+
   let res;
   try {
     res = await igdl(args[0]);
-  } catch (error) {
-    return conn.reply(m.chat, '*❌ Error al obtener el video, verifique que el enlace sea correcto*', m);
+  } catch (e) {
+    return conn.reply(m.chat, '❌ *Ocurrió un error descargando el video...*\n¿Será privado o ese link ya murió? 💀', m);
   }
 
-  let result = res.data;
+  let result = res?.data;
   if (!result || result.length === 0) {
-    return conn.reply(m.chat, '*⚠️ No se encontraron resultados.*', m);
+    return conn.reply(m.chat, '⚠️ *No encontré ni madres con ese link, intenta otro.*', m);
   }
 
-  let data;
-  try {
-    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
-  } catch (error) {
-    return conn.reply(m.chat, '*❌ Error al enviar el video de Facebook*', m);
-  }
+  let data = result.find(v => v.resolution.includes('720')) || result[0];
 
-  if (!data) {
-    return conn.reply(m.chat, '*⚠️ No se encontró una resolución adecuada.*', m);
+  if (!data?.url) {
+    return conn.reply(m.chat, '💔 *No hay video en buena calidad disponible... ¿me estás jugando?*', m);
   }
-
-  await m.react('✅');
-  let video = data.url;
 
   try {
     await conn.sendMessage(
       m.chat,
       {
-        video: { url: video },
-        caption: `\`\`\`◜Facebook - Download◞\`\`\`\n\n> 🏞️ *Calidad:* ${data.resolution}\n> ☄️ *Enlace:* ${args[0]}\n\n⟢🌲 Aquí tienes: 🌪️\n⟢🏞️ ¡Disfruta!`,
-        fileName: 'fb.mp4',
+        video: { url: data.url },
+        caption: `✨ *Hinata Bot te cumple el capricho*\n\n📥 *Resolución:* ${data.resolution}\n🌐 *Enlace original:* ${args[0]}\n\n🩷 *Disfrútalo, sabros@.*`,
+        fileName: `fb_video_${Date.now()}.mp4`,
         mimetype: 'video/mp4'
       },
-      { quoted: fkontak }
+      { quoted: m }
     );
-  } catch (error) {
+    await m.react('✅');
+  } catch (e) {
     await m.react('❌');
-    return conn.reply(m.chat, '*👻 La URL está corrupta, intenta con otra URL.*', m);
+    return conn.reply(m.chat, '😿 *No pude mandarlo, capaz que está muy pesado o dañado...*\nPrueba con otro link, pececito.', m);
   }
 };
 
-handler.help = ['facebook'];
-handler.tags = ['descargas'];
 handler.command = ['facebook', 'fb'];
+handler.help = ['facebook <url>', 'fb <url>'];
+handler.tags = ['descargas'];
 
 export default handler;
