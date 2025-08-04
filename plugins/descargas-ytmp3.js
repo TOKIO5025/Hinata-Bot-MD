@@ -6,7 +6,7 @@ const handler = async (m, { conn, text, command }) => {
     if (!text) {
       return conn.reply(m.chat, `╭━━⬣『 𝙔𝙊𝙐𝙏𝙐𝘽𝙀 𝙇𝙄𝙉𝙆 』⬣━━╮
 ┃⛩️ 𝙄𝙣𝙜𝙧𝙚𝙨𝙖 𝙪𝙣 𝙚𝙣𝙡𝙖𝙘𝙚 𝙙𝙚 𝙔𝙤𝙪𝙏𝙪𝙗𝙚 🌲
-╰━━━〔 🌀 Hinata 𝘽𝙊𝙏 〕━━⬣`, m, fake);
+╰━━━〔 🌀 Hinata 𝘽𝙊𝙏 〕━━⬣`, m,);
     }
 
     await conn.sendMessage(m.chat, { react: { text: '⏱️', key: m.key } });
