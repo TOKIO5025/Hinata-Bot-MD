@@ -11,10 +11,10 @@ const img = await q.download?.()
 if (!img) {
 console.error(`${msm} Error: No image buffer available`)
 return conn.reply(m.chat, '✘ ChatGpT no pudo descargar la imagen.', m)}
-const content = `${emoji} ¿Qué se observa en la imagen?`
+const content = `😼 ¿Qué se observa en la imagen?`
 try {
 const imageAnalysis = await fetchImageBuffer(content, img)
-const query = `${emoji} Descríbeme la imagen y detalla por qué actúan así. También dime quién eres`
+const query = ` ⚡ Descríbeme la imagen y detalla por qué actúan así. También dime quién eres`
 const prompt = `${basePrompt}. La imagen que se analiza es: ${imageAnalysis.result}`
 const description = await luminsesi(query, username, prompt)
 await conn.reply(m.chat, description, m)
@@ -22,10 +22,10 @@ await conn.reply(m.chat, description, m)
 await m.react(error)
 await conn.reply(m.chat, '✘ ChatGpT no pudo analizar la imagen.', m)}
 } else {
-if (!text) { return conn.reply(m.chat, `${emoji} Ingrese una petición para que el ChatGpT lo responda.`, m)}
+if (!text) { return conn.reply(m.chat, `🌟 Ingrese una petición para que el ChatGpT lo responda.`, m)}
 await m.react(rwait)
 try {
-const { key } = await conn.sendMessage(m.chat, {text: `${emoji2} ChatGPT está procesando tu petición, espera unos segundos.`}, {quoted: m})
+const { key } = await conn.sendMessage(m.chat, {text: `🌴 ChatGPT está procesando tu petición, espera unos segundos.`}, {quoted: m})
 const query = text
 const prompt = `${basePrompt}. Responde lo siguiente: ${query}`
 const response = await luminsesi(query, username, prompt)
