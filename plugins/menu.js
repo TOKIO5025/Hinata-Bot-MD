@@ -37,7 +37,8 @@ const defaultMenu = {
 
 ─────── 𝐌𝐄𝐍𝐔 𝐇𝐈𝐍𝐀𝐓𝐀 ───────
 🔞 *Tengo comandos traviesos, peligrosos y muy calientes...*
-¿Te atreves a usarlos, papito? 😈`.trim(),
+¿Te atreves a usarlos, papito? 😈
+%readmore`.trim(),
 
   header: '\n╭━━〔 💋 %category 〕━━⬣',
   body: '│ ➤ %cmd\n',
@@ -71,29 +72,41 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     const { before, header, body, footer, after } = defaultMenu
 
-    // Mensaje antes de menú
-    let textBefore = before.replace(/%name/g, name)
-      .replace(/%level/g, level)
-      .replace(/%exp/g, exp - min)
-      .replace(/%maxexp/g, xp)
-      .replace(/%totalreg/g, totalreg)
-      .replace(/%muptime/g, muptime)
+    let _text = [
+      before,
+      ...Object.keys(tags).map(tag => {
+        const cmds = help
+          .filter(menu => menu.tags.includes(tag))
+          .map(menu => menu.help.map(cmd => body.replace(/%cmd/g, menu.prefix ? cmd : _p + cmd)).join('\n'))
+          .join('\n')
+        return `${header.replace(/%category/g, tags[tag])}\n${cmds}\n${footer}`
+      }),
+      after
+    ].join('\n')
 
-    await conn.reply(m.chat, textBefore, m)
-    await conn.sendReaction(m.chat, '🐉', m.key)  // Reacciona al mensaje del usuario
-
-    // Envía cada categoría por separado rápido
-    for (let tag of Object.keys(tags)) {
-      const cmds = help
-        .filter(menu => menu.tags.includes(tag))
-        .map(menu => menu.help.map(cmd => body.replace(/%cmd/g, menu.prefix ? cmd : _p + cmd)).join('\n'))
-        .join('\n')
-
-      let textCategory = `${header.replace(/%category/g, tags[tag])}\n${cmds}\n${footer}\n${after}`
-
-      await conn.reply(m.chat, textCategory, m)
-      await conn.sendReaction(m.chat, '🐉', m.key)
+    let replace = {
+      '%': '%',
+      name,
+      level,
+      exp: exp - min,
+      maxexp: xp,
+      totalreg,
+      muptime,
+      readmore: String.fromCharCode(8206).repeat(4001)
     }
+
+    let text = _text.replace(/%(\w+)/g, (_, key) => replace[key] || '')
+
+    const videos = [
+      'https://files.catbox.moe/vjkomo.mp4',
+      'https://files.catbox.moe/qd0w49.mp4',
+      'https://files.catbox.moe/o9ha9b.mp4',
+      'https://files.catbox.moe/hbojsd.mp4',
+      'https://files.catbox.moe/zmm1hd.mp4'
+    ]
+    const selected = videos[Math.floor(Math.random() * videos.length)]
+
+    await conn.sendFile(m.chat, selected, 'hinata-menu.mp4', text, m)
 
   } catch (e) {
     console.error(e)
@@ -112,4 +125,4 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, '0')).join(':')
-      }
+
