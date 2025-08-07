@@ -1,51 +1,23 @@
 // 📥 Comando .facebook – Hinata Bot 💋
 // 💀 TOKIO5025 – github.com/TOKIO5025/Hinata-Bot-MD
 
-import { igdl } from 'ruhend-scraper';
+import fetch from 'node-fetch'
 
-const handler = async (m, { text, conn, args, usedPrefix, command }) => {
-  if (!args[0]) {
-    return conn.reply(m.chat, '*\`Ingresa El link Del vídeo a descargar ❤️‍🔥\`*', m, fake);
-  }
+let handler = async (m, { args, command, conn }) => {
+  if (!args[0]) throw `*Uso correcto: .${command} <enlace de Facebook>*`
 
-  await m.react('🕒');
-  let res;
-  try {
-    res = await igdl(args[0]);
-  } catch (error) {
-    return conn.reply(m.chat, '*`Error al obtener datos. Verifica el enlace.`*', m);
-  }
+  const res = await fetch(`https://eliasar-yt-api.vercel.app/api/facebookdl?link=${encodeURIComponent(args[0])}`)
+  if (!res.ok) throw `*Error al contactar con la API*`
 
-  let result = res.data;
-  if (!result || result.length === 0) {
-    return conn.reply(m.chat, '*`No se encontraron resultados.`*', m);
-  }
+  const json = await res.json()
+  if (!json.status || !json.data || !json.data.length) throw '*No se pudo obtener el video.*'
 
-  let data;
-  try {
-    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
-  } catch (error) {
-    return conn.reply(m.chat, '*`Error al procesar los datos.`*', m);
-  }
+  let video = json.data[0].url
+  await conn.sendFile(m.chat, video, 'facebook.mp4', '✅ *Aquí tienes tu video de Facebook*', m)
+}
 
-  if (!data) {
-    return conn.reply(m.chat, '*`No se encontró una resolución adecuada.`*', m);
-  }
-
-  await m.react('✅');
-  let video = data.url;
-
-  try {
-    await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'fb.mp4', mimetype: 'video/mp4' }, { quoted: m });
-  } catch (error) {
-    return conn.reply(m.chat, '*`Error al enviar el video.`*', m);
-  await m.react('❌');
-  }
-};
-
-handler.help = ['fb *<link>*'];
-handler.estrellas = 2
+handler.help = ['facebook', 'fb'].map(v => v + ' <enlace>')
 handler.tags = ['downloader']
-handler.command = /^(fb|facebook|fbdl)$/i;
+handler.command = ['fb', 'facebook']
 
-export default handler;                                                                                                                                                                                                                                          
+export default handler
