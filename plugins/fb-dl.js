@@ -1,23 +1,37 @@
 // 📥 Comando .facebook – Hinata Bot 💋
 // 💀 TOKIO5025 – github.com/TOKIO5025/Hinata-Bot-MD
 
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
 
 let handler = async (m, { args, command, conn }) => {
-  if (!args[0]) throw `*Uso correcto: .${command} <enlace de Facebook>*`
+  if (!args[0]) {
+    return m.reply(`✨ *Uso correcto: .${command} <enlace de Facebook>*\n\nEjemplo:\n.${command} https://www.facebook.com/watch/...`);
+  }
 
-  const res = await fetch(`https://eliasar-yt-api.vercel.app/api/facebookdl?link=${encodeURIComponent(args[0])}`)
-  if (!res.ok) throw `*Error al contactar con la API*`
+  try {
+    await m.react('🕒');
 
-  const json = await res.json()
-  if (!json.status || !json.data || !json.data.length) throw '*No se pudo obtener el video.*'
+    const res = await fetch(`https://eliasar-yt-api.vercel.app/api/facebookdl?link=${encodeURIComponent(args[0])}`);
+    if (!res.ok) throw '*El servidor no respondió correctamente.*';
 
-  let video = json.data[0].url
-  await conn.sendFile(m.chat, video, 'facebook.mp4', '✅ *Aquí tienes tu video de Facebook*', m)
-}
+    const json = await res.json();
+    if (!json.status || !json.data || !json.data.length) throw '*No se encontró el video.*';
 
-handler.help = ['facebook', 'fb'].map(v => v + ' <enlace>')
-handler.tags = ['downloader']
-handler.command = ['fb', 'facebook']
+    // buscar video SD para evitar enlaces rotos
+    let video = json.data.find(v => v.url && v.quality?.toLowerCase().includes('sd')) || json.data[0];
+    if (!video || !video.url) throw '*No se encontró un enlace válido para descargar.*';
 
-export default handler
+    await conn.sendFile(m.chat, video.url, 'facebook.mp4', `📥 *Video descargado exitosamente desde Facebook*\n\n🥵 Aquí lo tienes, mi cielo...`, m);
+    await m.react('✅');
+  } catch (e) {
+    console.error(e);
+    await m.react('⚠️');
+    m.reply(`❌ *No se pudo descargar el video:*\n${e.message}`);
+  }
+};
+
+handler.help = ['facebook', 'fb'].map(v => v + ' <enlace>');
+handler.tags = ['downloader'];
+handler.command = ['fb', 'facebook'];
+
+export default handler;
