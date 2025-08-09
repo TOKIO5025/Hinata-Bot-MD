@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
 const handler = async (m, { conn }) => {
-  const res = await fetch('https://nekos.life/api/v2/img/lewd');
+  const res = await fetch('https://delirius-apiofc.vercel.app/nsfw/girls');
   const json = await res.json();
 
   await conn.sendMessage(m.chat, {
