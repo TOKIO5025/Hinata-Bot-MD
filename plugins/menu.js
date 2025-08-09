@@ -26,8 +26,8 @@ let tags = {
 }
 
 const defaultMenu = {
-  before: `🍓 *Bienvenido al mundo travieso de 𝙃𝙞𝙣𝙖𝙩𝙖 𝘽𝙤𝙩...*
-👑 Soy tu diosa virtual, ¿quieres jugar conmigo, amorcito?
+  before: `🍑 *Bienvenido al mundo sensual y peligroso de 𝙃𝙞𝙣𝙖𝙩𝙖 𝙎𝙃𝙄𝙉𝙊𝘽𝙄...* 💋
+👑 Soy tu diosa virtual, ¿quieres que te castigue con mis comandos traviesos?
 
 ✨ ᴜꜱᴜᴀʀɪᴏ: %name
 🔮 ɴɪᴠᴇʟ: %level | ⚡ ᴇxᴘ: %exp / %maxexp
@@ -35,15 +35,15 @@ const defaultMenu = {
 💖 ᴇꜱᴛᴀᴅᴏ: ᴏɴʟɪɴᴇ
 ⏳ ᴛɪᴇᴍᴘᴏ ᴀᴄᴛɪᴠᴏ: %muptime
 
-─────── 𝐌𝐄𝐍𝐔 𝐇𝐈𝐍𝐀𝐓𝐀 ───────
-🔞 *Tengo comandos traviesos, peligrosos y muy calientes...*
-¿Te atreves a usarlos, papito? 😈
+─────── 𝐌𝐄𝐍𝐔 𝐇𝐈𝐍𝐀𝐓𝐀 𝙎𝙃𝙄𝙉𝙊𝘽𝙄 ───────
+🔞 *Mis comandos están tan calientes que te harán sudar...*
+¿Te atreves a probarlos, papito? 😈🔥
 %readmore`.trim(),
 
   header: '\n╭━━〔 💋 %category 〕━━⬣',
   body: '│ ➤ %cmd\n',
   footer: '╰━━━━━━━━━━━━⬣',
-  after: `\n💋 *Menú ejecutado, mi amor...*\n_¿Quieres más poder? Solo pídelo con gemidos 😏_`
+  after: `\n💋 *Menú ejecutado, mi amor...*\n_¿Quieres más poder? Solo susúrrame y yo lo haré 😏_`
 }
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
@@ -52,9 +52,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     await m.react('🕑')
 
     let { exp, level } = global.db.data.users[m.sender] || {}
-    if (!exp || !level) {
-      return conn.reply(m.chat, '❎ *No se pudo obtener tu información de usuario.*', m)
-    }
+    if (!exp || !level) throw new Error('Tu información de usuario se perdió en las sombras, cariño')
 
     let { min, xp, max } = xpRange(level, global.multiplier)
     let name = await conn.getName(m.sender)
@@ -118,8 +116,8 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
   } catch (e) {
     console.error(e)
-    conn.reply(m.chat, `❎ *Oops... fallé como tu diosa virtual 💔 Hinata necesita mimos.*
-    
+    conn.reply(m.chat, `❎ *Ups... fallé como tu diosa Shinobi 💔 Hinata necesita mimos.*
+
 🔴 *Error detectado:*
 \`\`\`
 ${e.message}
@@ -139,4 +137,4 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, '0')).join(':')
-                             }
+  }
