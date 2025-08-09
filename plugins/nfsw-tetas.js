@@ -15,8 +15,8 @@ let handler = async (m, { conn }) => {
   }, { quoted: m });
 };
 
-handler.help = ['tetas'];
+handler.help = ['tet'];
 handler.tags = ['nsfw'];
-handler.command = ['tetas', 'pechos'];
+handler.command = ['tet', 'pecho'];
 
 export default handler;
