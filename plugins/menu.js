@@ -51,8 +51,13 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Reacción rápida antes de procesar
     await m.react('🕑')
 
+    // Obtener información del usuario de la base de datos
     let { exp, level } = global.db.data.users[m.sender] || {}
-    if (!exp || !level) throw new Error('Tu información de usuario se perdió en las sombras, cariño')
+    if (!exp || !level) {
+      // Si no se encuentra la información del usuario, asignar valores predeterminados
+      exp = 0
+      level = 1
+    }
 
     let { min, xp, max } = xpRange(level, global.multiplier)
     let name = await conn.getName(m.sender)
