@@ -48,7 +48,14 @@ const defaultMenu = {
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
   try {
-    let { exp, level } = global.db.data.users[m.sender]
+    // Reacción rápida antes de procesar
+    await m.react('🕑')
+
+    let { exp, level } = global.db.data.users[m.sender] || {}
+    if (!exp || !level) {
+      return conn.reply(m.chat, '❎ *No se pudo obtener tu información de usuario.*', m)
+    }
+
     let { min, xp, max } = xpRange(level, global.multiplier)
     let name = await conn.getName(m.sender)
     let _uptime = process.uptime() * 1000
@@ -106,11 +113,18 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     ]
     const selected = videos[Math.floor(Math.random() * videos.length)]
 
+    // Enviar el archivo y el texto
     await conn.sendFile(m.chat, selected, 'hinata-menu.mp4', text, m)
 
   } catch (e) {
     console.error(e)
-    conn.reply(m.chat, '❎ *Oops... fallé como tu diosa virtual 💔 Hinata necesita mimos.*', m)
+    conn.reply(m.chat, `❎ *Oops... fallé como tu diosa virtual 💔 Hinata necesita mimos.*
+    
+🔴 *Error detectado:*
+\`\`\`
+${e.message}
+\`\`\`
+`, m)
   }
 }
 
@@ -125,4 +139,4 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, '0')).join(':')
-  }
+                             }
