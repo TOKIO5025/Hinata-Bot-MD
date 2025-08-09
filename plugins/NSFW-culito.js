@@ -6,7 +6,7 @@ const handler = async (m, { conn }) => {
 
   await conn.sendMessage(m.chat, {
     image: { url: json.url },
-    caption: `🍑 Aquí está tu culito diario, sucio/a 😈`,
+    caption: `😼 Aquí está tu culito diario, sucio/a 😈`,
   }, { quoted: m });
 };
 
