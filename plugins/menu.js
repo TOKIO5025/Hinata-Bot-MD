@@ -108,11 +108,11 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let text = _text.replace(/%(\w+)/g, (_, key) => replace[key] || '')
 
     const videos = [
-      'https://files.catbox.moe/vjkomo.mp4',
-      'https://files.catbox.moe/qd0w49.mp4',
-      'https://files.catbox.moe/o9ha9b.mp4',
-      'https://files.catbox.moe/hbojsd.mp4',
-      'https://files.cloudkuimages.guru/videos/lDt6pSuW.mp4'
+      'https://files.cloudkuimages.guru/images/dQwgPEAt.jpg',
+      'https://files.cloudkuimages.guru/images/zQdRjSX7.jpg',
+      'https://files.cloudkuimages.guru/images/MxFaAos6.jpg',
+      'https://files.cloudkuimages.guru/images/GzXbIfWA.jpg',
+      'https://files.cloudkuimages.guru/images/N1BYGRr2.jpg'
     ]
     const selected = videos[Math.floor(Math.random() * videos.length)]
 
