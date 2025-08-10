@@ -112,7 +112,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       'https://files.catbox.moe/qd0w49.mp4',
       'https://files.catbox.moe/o9ha9b.mp4',
       'https://files.catbox.moe/hbojsd.mp4',
-      'https://files.catbox.moe/zmm1hd.mp4'
+      'https://files.cloudkuimages.guru/videos/lDt6pSuW.mp4'
     ]
     const selected = videos[Math.floor(Math.random() * videos.length)]
 
