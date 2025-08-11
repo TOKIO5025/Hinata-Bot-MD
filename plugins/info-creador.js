@@ -13,7 +13,7 @@ END:VCARD`;
     // Contacto del Staff
     let vcardStaff = `BEGIN:VCARD
 VERSION:3.0
-FN:📞 Staff David
+FN:📞 Staff David 
 TEL;waid=522219831926:522219831926
 END:VCARD`;
 
