@@ -7,7 +7,7 @@ let handler = async (m, { conn }) => {
     let vcardCreador = `BEGIN:VCARD
 VERSION:3.0
 FN:🐉 NeoTokyo Beats
-TEL;waid=50248019799:50248019799
+TEL;waid=573142495895:573142495895
 END:VCARD`;
 
     // Contacto del Staff
