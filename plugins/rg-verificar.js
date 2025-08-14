@@ -77,25 +77,24 @@ let handler = async function (m, { text, usedPrefix, command, conn }) {
 ┃ Usa *${usedPrefix}profile* para ver tu perfil.
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
 `.trim();
-// Usa la foto de perfil del bot en vez de la del usuario
-let botProfilePic = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => 'https://files.catbox.moe/39mmqv.jpg')
-await conn.sendMessage(
-    m.chat,
-    {
-        image: { url: botProfilePic },
-        caption,
-        contextInfo: {
-            externalAdReply: {
-                title: `${conn.getName(conn.user.jid)} Sistema`,
-                body: `Registro exitoso en la base de datos`,
-                thumbnailUrl: botProfilePic,
-                mediaType: 1,
-                renderLargerThumbnail: true
+
+  await conn.sendMessage(
+        m.chat,
+        {
+            image: { url: pp },
+            caption,
+            contextInfo: {
+                externalAdReply: {
+                    title: `${conn.getName(conn.user.jid)} Sistema`,
+                    body: `Registro exitoso en la base de datos`,
+                    thumbnailUrl: pp,
+                    mediaType: 1,
+                    renderLargerThumbnail: true
+                }
             }
-        }
-    },
-    { quoted: m }
-);
+        },
+        { quoted: m }
+    );
 }
 
 handler.help = ['registrar']
