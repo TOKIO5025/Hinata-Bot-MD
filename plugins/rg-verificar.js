@@ -34,7 +34,7 @@ let handler = async function (m, { text, usedPrefix, command, conn }) {
     if (user.registered === true) throw `❗ ¡Ya estás registrado!\n\n¿Quieres registrarte de nuevo?\nEscribe:\n${usedPrefix}unreg ${sn}`
 
     if (!text && !m.quoted) {
-        return m.reply(`「 *REGISTRO* 」\n\n⚡ Para registrarte usa el comando:\n${usedPrefix}${command} nombre.edad\n\n📌 Ejemplo: ${usedPrefix}${command} ryze.25`)
+        return m.reply(`「 *REGISTRO* 」\n\n⚡ Para registrarte usa el comando:\n${usedPrefix}${command} nombre.edad\n\n📌 Ejemplo: ${usedPrefix}${command} hinata.25`)
     }
 
     if (!Reg.test(text)) return m.reply(`⚠️ Formato incorrecto.\n\nUso del comando: *${usedPrefix + command} nombre.edad*\nEjemplo : *${usedPrefix + command} ${nombre}.18*`)
@@ -77,24 +77,25 @@ let handler = async function (m, { text, usedPrefix, command, conn }) {
 ┃ Usa *${usedPrefix}profile* para ver tu perfil.
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
 `.trim();
-
-    await conn.sendMessage(
-        m.chat,
-        {
-            image: { url: pp },
-            caption,
-            contextInfo: {
-                externalAdReply: {
-                    title: `${conn.getName(conn.user.jid)} Sistema`,
-                    body: `Registro exitoso en la base de datos`,
-                    thumbnailUrl: pp,
-                    mediaType: 1,
-                    renderLargerThumbnail: true
-                }
+// Usa la foto de perfil del bot en vez de la del usuario
+let botProfilePic = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => 'https://files.catbox.moe/39mmqv.jpg')
+await conn.sendMessage(
+    m.chat,
+    {
+        image: { url: botProfilePic },
+        caption,
+        contextInfo: {
+            externalAdReply: {
+                title: `${conn.getName(conn.user.jid)} Sistema`,
+                body: `Registro exitoso en la base de datos`,
+                thumbnailUrl: botProfilePic,
+                mediaType: 1,
+                renderLargerThumbnail: true
             }
-        },
-        { quoted: m }
-    );
+        }
+    },
+    { quoted: m }
+);
 }
 
 handler.help = ['registrar']
