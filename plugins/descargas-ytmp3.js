@@ -76,5 +76,6 @@ const handler = async (m, { conn, text, command }) => {
 handler.command = ['ytmp3'];
 handler.tags = ['descargas'];
 handler.help = ['ytmp3 *<link o título>*'];
+handler.register = true
 
 export default handler;
