@@ -10,37 +10,20 @@ let handler = async function (m, { text, conn, command, usedPrefix, args }) {
   const defaultImg = 'https://files.catbox.moe/xr2m6u.jpg';
   const pp = await conn.profilePictureUrl(m.sender, "image").catch(_ => defaultImg);
 
-  if (!args[0]) {
-    let info = `╔════════════════════╗
-  ║   ⚠️ *DESREGISTRO* ⚠️   ║
-  ╚════════════════════╝
-
-  👤 *Nombre:* ${nombre}
-  🎂 *Edad:* ${edad} años
-  🔑 *Serie:* ${sn}
-
-  Para confirmar tu desregistro, responde con:
-  ${usedPrefix}${command} ${sn}
-  `;
-
-    await conn.sendFile(m.chat, pp, 'pp.jpg', info, m);
-    return;
-  }
-
-  if (args[0] !== sn) throw '❌ *¡Número de serie incorrecto!*\nVerifica tu SN.';
+  // Proceder directamente con el desregistro
 
   let caption = `
-╔══✦══❖•ೋ° °ೋ•❖══✦══╗
-      *DESREGISTRO COMPLETADO*
-╚══✦══❖•ೋ° °ೋ•❖══✦══╝
+╭━━━[ 𝙳𝙴𝚂𝚁𝙴𝙶𝙸𝚂𝚃𝚁𝙾 𝙴𝚇𝙸𝚃𝙾𝚂𝙾 ]━━━╮
 
-👤 *Usuario:* ${nombre}
-🎂 *Edad:* ${edad} años
-🔑 *Serie:* _${sn}_
+👤 𝙽𝚘𝚖𝚋𝚛𝚎: *${nombre}*
+🎂 𝙴𝚍𝚊𝚍: *${edad}* 𝚊ñ𝚘𝚜
+🔑 𝚂𝚎𝚛𝚒𝚎: _${sn}_
 
-🗑️ Tus datos han sido eliminados del sistema *${conn.getName(conn.user.jid)}*.
+━━━━━━━━━━━━━━━━━━━━━━
+🗑️ 𝚃𝚞𝚜 𝚍𝚊𝚝𝚘𝚜 𝚑𝚊𝚗 𝚜𝚒𝚍𝚘 𝚎𝚕𝚒𝚖𝚒𝚗𝚊𝚍𝚘𝚜 𝚍𝚎 *${conn.getName(conn.user.jid)}*.
 
-⚠️ Si deseas volver a registrarte, usa el comando de registro.
+⚡ 𝚂𝚒 𝚚𝚞𝚒𝚎𝚛𝚎𝚜 𝚟𝚘𝚕𝚟𝚎𝚛 𝚊 𝚛𝚎𝚐𝚒𝚜𝚝𝚛𝚊𝚛𝚝𝚎, 𝚞𝚜𝚊 𝚎𝚕 𝚌𝚘𝚖𝚊𝚗𝚍𝚘: *${usedPrefix}reg nombre.edad*
+╰━━━━━━━━━━━━━━━━━━━━╯
 `;
 
   await conn.sendMessage(
