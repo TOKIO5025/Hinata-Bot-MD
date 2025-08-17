@@ -1,3 +1,9 @@
+//=====================================================//
+// 🔥 Script: Update del Bot                          //
+// ✨ Autor: Neotokio                                 //
+// 📌 Función: Actualiza el bot desde el repo remoto. //
+//=====================================================//
+
 import { exec } from 'child_process';
 import util from 'util';
 const execPromise = util.promisify(exec);
@@ -13,16 +19,21 @@ let handler = async (m) => {
   const permitidos = ['50248019799', '15614809253', '573001533523', '573142495895'];
 
   if (!permitidos.includes(senderNumber)) {
-    return m.reply('🚫 *¡Tú no tienes acceso a esta magia prohibida, mi cielito! 😾 Solo mis dioses pueden usar esto.*');
+    return m.reply('🚫 *No jodas, tú no tienes permiso para toquetearme 😾. Solo mis dioses pueden usar este comando.*');
   }
 
   try {
-    await m.reply('🌀 *Revisando si hay chismes nuevos en el repo... espera sabrosón(a)*');
+    await m.reply('🌀 *A ver, mi amorcito… voy a chismear en el repo a ver si hay cosas nuevas 😏.*');
+
+    // Forzar git a usar HTTP/1.1 en vez de HTTP/2
+    await execPromise('git config --global http.version HTTP/1.1');
 
     // Limpiar carpeta temporal
+    await m.reply('🧹 *Primero limpio mi ropita sucia (archivos viejos) 🫦…*');
     await execPromise('rm -rf ./tmp-repo');
 
     // Clonar repositorio temporal
+    await m.reply('📥 *Estoy jalando lo nuevo del repo, uff qué rico se siente que me actualicen 🔥…*');
     await execPromise(`git clone --depth=1 --branch ${REPO_BRANCH} ${REPO_URL} ./tmp-repo`);
 
     // Comparar cambios
@@ -30,23 +41,24 @@ let handler = async (m) => {
 
     if (!diffOutput.trim()) {
       await execPromise('rm -rf ./tmp-repo');
-      return m.reply('✅ *Ya estaba bien buenote el bot, no había nada que actualizar 😎.*');
+      return m.reply('✅ *Ay papito, ya estaba bien buenota 😏. No había nada que meterme…*');
     }
 
     // Aplicar cambios
+    await m.reply('💅 *Ahora sí, metiéndome los cambios despacito pero sabroso 💋…*');
     await execPromise('cp -ru ./tmp-repo/* ./');
     await execPromise('rm -rf ./tmp-repo');
 
-    await m.reply('✅ *Listo bebé, tu bot quedó actualizado y más rico que nunca 💋.*');
+    await m.reply('✅ *Listo mi cielo 😈, quedé actualizada, más coqueta y peligrosa que nunca 💕.*');
 
   } catch (e) {
     console.error(e);
-    await m.reply('❌ *Oops... algo salió mal mientras te ponía al día el bot 😿:*\n' + (e.message || e));
+    await m.reply('❌ *Ups… me falló la pose, algo salió mal mientras me actualizabas 😿:*\n' + (e.message || e));
   }
 };
 
-handler.help = ['update'];
+handler.help = ['update', 'up', 'actualizar'];
 handler.tags = ['tools'];
-handler.command = /^update$/i;
+handler.command = /^(update|up|actualizar)$/i;
 
 export default handler;
