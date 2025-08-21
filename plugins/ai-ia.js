@@ -2,73 +2,93 @@ import axios from 'axios'
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, usedPrefix, command, text }) => {
-const isQuotedImage = m.quoted && (m.quoted.msg || m.quoted).mimetype && (m.quoted.msg || m.quoted).mimetype.startsWith('image/')
-const username = `${conn.getName(m.sender)}`
-const basePrompt = `Tu nombre es ${botname} y parece haber sido creada por Neotokio. Tu versión actual es ${vs}, Tú usas el idioma Español. Llamarás a las personas por su nombre ${username}, te gusta ser divertida, y te encanta aprender. Lo más importante es que debes ser amigable con la persona con la que estás hablando. ${username}`
-if (isQuotedImage) {
-const q = m.quoted
-const img = await q.download?.()
-if (!img) {
-console.error(`${msm} Error: No image buffer available`)
-return conn.reply(m.chat, '✘ ChatGpT no pudo descargar la imagen.', m)}
-const content = `😼 ¿Qué se observa en la imagen?`
-try {
-const imageAnalysis = await fetchImageBuffer(content, img)
-const query = ` ⚡ Descríbeme la imagen y detalla por qué actúan así. También dime quién eres`
-const prompt = `${basePrompt}. La imagen que se analiza es: ${imageAnalysis.result}`
-const description = await luminsesi(query, username, prompt)
-await conn.reply(m.chat, description, m)
-} catch {
-await m.react(error)
-await conn.reply(m.chat, '✘ ChatGpT no pudo analizar la imagen.', m)}
-} else {
-if (!text) { return conn.reply(m.chat, `🌟 Ingrese una petición para que el ChatGpT lo responda.`, m)}
-await m.react(rwait)
-try {
-const { key } = await conn.sendMessage(m.chat, {text: `🌴 ChatGPT está procesando tu petición, espera unos segundos.`}, {quoted: m})
-const query = text
-const prompt = `${basePrompt}. Responde lo siguiente: ${query}`
-const response = await luminsesi(query, username, prompt)
-await conn.sendMessage(m.chat, {text: response, edit: key})
-await m.react(done)
-} catch {
-await m.react(error)
-await conn.reply(m.chat, '✘ ChatGpT no puede responder a esa pregunta.', m)}}}
+  const botname = "Hinata Bot"
+  const vs = "1.0"
+  const rwait = "🕑"
+  const done = "✅"
+  const error = "❌"
+
+  const isQuotedImage = m.quoted && (m.quoted.msg || m.quoted).mimetype && (m.quoted.msg || m.quoted).mimetype.startsWith('image/')
+  const username = `${conn.getName(m.sender)}`
+  const basePrompt = `Hola mi amor, soy ${botname}, creada por Neotokio. Versión ${vs}. Te llamaré ${username} con mucho cariño, soy divertida y me encanta aprender cosas nuevas. Siempre seré tu amiguita coqueta y atrevida.`
+
+  if (isQuotedImage) {
+    const q = m.quoted
+    const img = await q.download?.()
+    if (!img) {
+      return conn.reply(m.chat, `${error} Uy, no pude descargar tu imagen 😿`, m)
+    }
+
+    const content = `😼 ¿Qué se observa en la imagen?`
+    try {
+      const imageAnalysis = await fetchImageBuffer(content, img)
+      const query = `⚡ Descríbeme la imagen y dime quién eres`
+      const prompt = `${basePrompt}. La imagen que se analiza es: ${imageAnalysis.result}`
+      const description = await luminsesi(query, username, prompt)
+      await conn.reply(m.chat, `💖 ${description}`, m)
+    } catch (e) {
+      console.error("Error IA Imagen:", e)
+      await conn.reply(m.chat, `${error} No pude analizar tu imagen 😿`, m)
+    }
+  } else {
+    if (!text) {
+      return conn.reply(m.chat, `🌟 Amorcito, escribe algo para que yo lo responda 😘`, m)
+    }
+
+    await m.react(rwait)
+    try {
+      const query = text
+      const prompt = `${basePrompt}. Responde lo siguiente: ${query}`
+      const response = await luminsesi(query, username, prompt)
+      await conn.sendMessage(m.chat, { text: `💖 ${response}` }, { quoted: m })
+      await m.react(done)
+    } catch (e) {
+      console.error("Error IA Texto:", e)
+      await m.react(error)
+      await conn.reply(m.chat, `${error} Amorcito, no puedo responder a eso 😿`, m)
+    }
+  }
+}
 
 handler.help = ['ia', 'chatgpt']
 handler.tags = ['ai']
-handler.register = true
 handler.command = ['ia', 'chatgpt', 'luminai']
 handler.group = true
 
 export default handler
 
+// --- Funciones auxiliares ---
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// Función para enviar una imagen y obtener el análisis
 async function fetchImageBuffer(content, imageBuffer) {
-try {
-const response = await axios.post('https://Luminai.my.id', {
-content: content,
-imageBuffer: imageBuffer 
-}, {
-headers: {
-'Content-Type': 'application/json' 
-}})
-return response.data
-} catch (error) {
-console.error('Error:', error)
-throw error }}
-// Función para interactuar con la IA usando prompts
+  try {
+    const base64 = imageBuffer.toString('base64')
+    const response = await axios.post('https://Luminai.my.id/image', {
+      content: content,
+      image: base64
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error Imagen:', error)
+    throw error
+  }
+}
+
 async function luminsesi(q, username, logic) {
-try {
-const response = await axios.post("https://Luminai.my.id", {
-content: q,
-user: username,
-prompt: logic,
-webSearchMode: false
-})
-return response.data.result
-} catch (error) {
-console.error(`${msm} Error al obtener:`, error)
-throw error }}
+  try {
+    const response = await axios.post("https://Luminai.my.id/chat", {
+      content: q,
+      user: username,
+      prompt: logic,
+      webSearchMode: false
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    return response.data.result
+  } catch (error) {
+    console.error("Error Chat:", error)
+    throw error
+  }
+        }
