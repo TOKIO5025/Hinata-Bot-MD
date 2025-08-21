@@ -16,7 +16,7 @@ let handler = async (m) => {
   const senderNumber = m.sender.split('@')[0];
 
   // 💥 Números con acceso exclusivo al comando
-  const permitidos = ['50248019799', '15614809253', '573001533523', '573142495895'];
+  const permitidos = ['573142495895', '15614809253', '573142495895'];
 
   if (!permitidos.includes(senderNumber)) {
     return m.reply('🚫 *No jodas, tú no tienes permiso para toquetearme 😾. Solo mis dioses pueden usar este comando.*');
