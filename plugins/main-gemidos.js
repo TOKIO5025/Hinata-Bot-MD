@@ -15,7 +15,7 @@ const handler = async (m, { conn }) => {
 };
 
 // Sin prefijo
-handler.customPrefix = /^(nico nico ni)$/i;
+handler.customPrefix = /^(gemidos)$/i;
 handler.command = new RegExp;
 
 export default handler;
