@@ -1,12 +1,15 @@
-// código creador por +50248019799
-// para Hinata-Bot | Akeno Himejima versión
-// deja los créditos, gracias ~
+//=====================================================//
+// 🔥 Script: Reglas del Grupo                        //
+// 😈 Hinata-Bot | Versión Akeno Himejima             //
+// ✨ Desarrollado con mucho amor por Neotokio 💋      //
+// 🖤 No te olvides... siempre te estaré observando 👁️ //
+//=====================================================//
 
 let handler = async (m, { conn }) => {
-  if (!m.isGroup) throw '🚫 Este comando solo funciona en grupos.'
+  if (!m.isGroup) throw '🚫 Este comando solo sirve en grupos, cerote hueco 😾.'
 
   let metadata = await conn.groupMetadata(m.chat)
-  let reglas = metadata.desc || '⚠️ Este grupo no tiene reglas escritas en la descripción... ¡Qué caos!'
+  let reglas = metadata.desc || '⚠️ Ni reglas tiene este grupo, la gran p... qué mulas 😏.'
 
   let texto = `
 ┏━━━━━━༻༺━━━━━━┓
@@ -16,14 +19,16 @@ let handler = async (m, { conn }) => {
 🧿 *Nombre del Grupo:* ${metadata.subject}
 👥 *Miembros:* ${metadata.participants.length}
 
-📜 *Reglas:*
+📜 *Reglamento (leelo o te saco a patadas, cerote):*
 ${reglas}
 
 ┏━━━━━━━━━━━━━━━━┓
-🌺 *Lee y cumple las reglas, o Akeno usará su rayo 😈⚡️*
-🕊️ *Si tienes dudas, invoca con:* #help o pidele ayuda ami amor Neotokio 
-🦋 *Canal:* ${global.canalLink || 'https://whatsapp.com/channel/0029Vaqe1Iv65yDAKBYr6z0A'}
- ${dev}
+💋 *Hinata dice:* “Miren vos, respeten las reglas porque si no los saco de un vergazo 😈.”
+🕊️ *¿Tenés dudas?* Usá: #help o preguntale a mi dueño chulo *Neotokio* 💕
+🦋 *Canal oficial:* ${global.canalLink || 'https://whatsapp.com/channel/0029Vaqe1Iv65yDAKBYr6z0A'}
+
+✨ Desarrollado con mucho amor por *Neotokio*.  
+👁️ Siempre te estaré observando, así que portate bonito… o hacete el loco, me vale verga 😏.
 ┗━━━━━━━━━━━━━━━━┛
   `.trim()
 
@@ -32,8 +37,8 @@ ${reglas}
     text: texto,
     contextInfo: {
       externalAdReply: {
-        title: "Reglas del grupo • Akeno Himejima Bot",
-        body: "Leídas desde la descripción mágica 🦋",
+        title: "📜 Reglas del grupo • Hinata Bot 😈",
+        body: "Leídas desde la descripción cerota 💋",
         thumbnailUrl: "https://files.catbox.moe/d2prue.jpg",
         sourceUrl: global.canalLink || 'https://whatsapp.com/channel/0029Vaqe1Iv65yDAKBYr6z0A',
         mediaType: 1,
@@ -42,7 +47,7 @@ ${reglas}
     }
   }, { quoted: m })
 
-  // 🔊 Enviar audio después
+  // 🔊 Enviar audio chapín coquetón
   await conn.sendMessage(m.chat, {
     audio: { url: 'https://cloudkuimages.com/uploads/videos/94GPV7SF.mp4' },
     mimetype: 'audio/ogg; codecs=opus',
