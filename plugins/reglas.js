@@ -21,7 +21,7 @@ ${reglas}
 
 ┏━━━━━━━━━━━━━━━━┓
 🌺 *Lee y cumple las reglas, o Akeno usará su rayo 😈⚡️*
-🕊️ *Si tienes dudas, invoca con:* #help
+🕊️ *Si tienes dudas, invoca con:* #help o pidele ayuda ami amor Netokio 
 🦋 *Canal:* ${global.canalLink || 'https://whatsapp.com/channel/0029Vaqe1Iv65yDAKBYr6z0A'}
  ${dev}
 ┗━━━━━━━━━━━━━━━━┛
@@ -44,7 +44,7 @@ ${reglas}
 
   // 🔊 Enviar audio después
   await conn.sendMessage(m.chat, {
-    audio: { url: 'https://o.uguu.se/aCeklHGB.opus' },
+    audio: { url: 'https://cloudkuimages.com/uploads/videos/94GPV7SF.mp4' },
     mimetype: 'audio/ogg; codecs=opus',
     ptt: true
   }, { quoted: m })
