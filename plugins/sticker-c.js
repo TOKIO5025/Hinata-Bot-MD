@@ -38,7 +38,7 @@ else return m.reply(`⚠️El url es incorrecto`)
 console.error(e)
 if (!stiker) stiker = e
 } finally {
-if (stiker) conn.sendFile(m.chat, stiker, 'sticker.webp', '',m, true, { contextInfo: { 'forwardingScore': 200, 'isForwarded': false, externalAdReply:{ showAdAttribution: false, title: packname, body: `𝑺𝒖𝒌𝒖𝒏𝒂 𝒎𝒅 • 𝘽𝙮 𝙩𝙝𝙚𝘽𝙡𝙖𝙘𝙠`, mediaType: 2, sourceUrl: m, thumbnail: icons}}}, { quoted: m })
+if (stiker) conn.sendFile(m.chat, stiker, 'sticker.webp', '',m, true, { contextInfo: { 'forwardingScore': 200, 'isForwarded': false, externalAdReply:{ showAdAttribution: false, title: packname, body: `𝑺𝒖𝒌𝒖𝒏𝒂 𝒎𝒅 • 𝘽𝙮 𝙩𝙝𝙚𝘽𝙡𝙖𝙘𝙠`, mediaType: 2, sourceUrl: m, thumbnail: m,}}}, { quoted: m })
 
 else return conn.reply(m.chat, `╭━〔 🥥 𝗦𝘁𝗶𝗰𝗸𝗲𝗿 𝗧𝗶𝗺𝗲! 〕━⬣
 ┃
