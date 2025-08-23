@@ -9,31 +9,36 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     let f = stick[0] !== "" ? stick[0] : global.packname
     let g = typeof stick[1] !== "undefined" ? stick[1] : global.author
 
-    try {         
+    try {
         let q = m.quoted ? m.quoted : m
         let mime = (q.msg || q).mimetype || q.mediaType || ''
+        let img;
 
-        // Si es imagen, video o sticker
-        if (/webp|image|video/g.test(mime)) {
-            if (/video/g.test(mime) && (q.msg || q).seconds > 18) 
+        // Si es sticker, imagen o video
+        if (q.msg?.sticker || /webp|image|video/.test(mime)) {
+            if (q.msg?.sticker) {
+                // Sticker → webp
+                img = await q.download?.() // descarga el sticker
+            } else if (/video/.test(mime) && (q.msg || q).seconds > 18) {
                 return m.reply('⚠️ Uy vos, el video está bien largo 😏 hacelo más cortito, máximo 12 segs, chapina traviesa 😘')
+            } else {
+                img = await q.download?.()
+            }
 
-            let img = await q.download?.()
-            if (!img) return m.reply(`*A ver, mi chapinita 😘* responde a una imagen o sticker para hacer tu sticker, ¿sí? Usa: ${usedPrefix + command}`) 
+            if (!img) return m.reply(`*A ver, mi chapinita 😘* responde a una imagen o sticker para hacer tu sticker, ¿sí? Usa: ${usedPrefix + command}`)
 
             try {
                 stiker = await sticker(img, false, f, g)
             } catch (e) {
                 console.error(e)
                 let out
-                if (/webp/g.test(mime)) out = await webp2png(img) // sticker → png
-                else if (/image/g.test(mime)) out = await uploadImage(img)
-                else if (/video/g.test(mime)) out = await uploadFile(img)
+                if (q.msg?.sticker || /webp/.test(mime)) out = await webp2png(img)
+                else if (/image/.test(mime)) out = await uploadImage(img)
+                else if (/video/.test(mime)) out = await uploadFile(img)
                 stiker = await sticker(false, out, f, g)
             }
 
         } else if (args[0]) {
-            // Si es URL
             if (isUrl(args[0])) stiker = await sticker(false, args[0], global.packname, global.author)
             else return m.reply('Esa URL está malita 😏 pasame una buena, chapina traviesa 😘')
         } else {
@@ -44,7 +49,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         if (!stiker) stiker = e
     } finally {
         if (stiker) {
-            // Enviar como sticker correctamente
             conn.sendMessage(m.chat, { sticker: stiker }, { quoted: m })
         }
     }
@@ -58,4 +62,4 @@ export default handler
 
 const isUrl = (text) => {
     return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'))
-}
+        }
