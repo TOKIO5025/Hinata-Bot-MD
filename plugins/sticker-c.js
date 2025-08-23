@@ -14,25 +14,27 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         let mime = (q.msg || q).mimetype || q.mediaType || ''
         let img;
 
-        // Si es sticker, imagen o video
+        // Sticker animado o imagen/video
         if (q.msg?.sticker || /webp|image|video/.test(mime)) {
             if (q.msg?.sticker) {
-                // Sticker → webp
-                img = await q.download?.() // descarga el sticker
-            } else if (/video/.test(mime) && (q.msg || q).seconds > 18) {
-                return m.reply('⚠️ Uy vos, el video está bien largo 😏 hacelo más cortito, máximo 12 segs, chapina traviesa 😘')
+                // Sticker animado → descargar webp
+                img = await q.download?.()
+                if (!img) return m.reply('*Chapinita traviesa 😏* no pude descargar tu sticker 😢')
+            } else if (/video/.test(mime)) {
+                if ((q.msg || q).seconds > 18) 
+                    return m.reply('⚠️ Uy vos, el video está bien largo 😏 máximo 12 segs, hacelo corto mi chapina 😘')
+                img = await q.download?.()
             } else {
                 img = await q.download?.()
             }
 
-            if (!img) return m.reply(`*A ver, mi chapinita 😘* responde a una imagen o sticker para hacer tu sticker, ¿sí? Usa: ${usedPrefix + command}`)
-
+            // Crear el sticker
             try {
                 stiker = await sticker(img, false, f, g)
             } catch (e) {
                 console.error(e)
                 let out
-                if (q.msg?.sticker || /webp/.test(mime)) out = await webp2png(img)
+                if (q.msg?.sticker || /webp/.test(mime)) out = await webp2png(img) // sticker animado → png frame
                 else if (/image/.test(mime)) out = await uploadImage(img)
                 else if (/video/.test(mime)) out = await uploadFile(img)
                 stiker = await sticker(false, out, f, g)
@@ -42,13 +44,14 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             if (isUrl(args[0])) stiker = await sticker(false, args[0], global.packname, global.author)
             else return m.reply('Esa URL está malita 😏 pasame una buena, chapina traviesa 😘')
         } else {
-            return m.reply(`*Ey vos, no me mandaste nada 😏* Responde a una imagen o sticker para hacer tu sticker, chapina traviesa. Usa: ${usedPrefix + command}`)
+            return m.reply(`*Ey vos, no me mandaste nada 😏* Responde a una imagen, video o sticker animado para hacer tu sticker, chapina traviesa. Usa: ${usedPrefix + command}`)
         }
     } catch (e) {
         console.error(e)
         if (!stiker) stiker = e
     } finally {
         if (stiker) {
+            // Enviar como sticker animado si aplica
             conn.sendMessage(m.chat, { sticker: stiker }, { quoted: m })
         }
     }
@@ -62,4 +65,4 @@ export default handler
 
 const isUrl = (text) => {
     return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'))
-        }
+    }
