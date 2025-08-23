@@ -15,7 +15,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   conn.reply(m.chat, '🖤 *Cierra el pico un rato...* estoy buscando tus imágenes 🔍✨', m);
 
   try {
-    let { data } = await axios.get(`https://anime-xi-wheat.vercel.app/api/pinterest?q=${encodeURIComponent(query)}`);
+    let { data } = await axios.get(`https://api.dorratz.com/v2/pinterest?q=${encodeURIComponent(query)}`);
     let images = data.slice(0, 6).map(item => item.image_large_url);
 
     if (!images.length) throw 'No encontré nada, mi rey. Busca mejor.';
