@@ -5,6 +5,9 @@ const haremFilePath = './src/database/harem.json';
 
 const cooldowns = {};
 
+// 👉 Aquí pones el número que tendrá rw infinitos (formato WhatsApp ID)
+const premiumUser = "573142495895@s.whatsapp.net"; 
+
 async function loadCharacters() {
     try {
         const data = await fs.readFile(charactersFilePath, 'utf-8');
@@ -43,15 +46,18 @@ let handler = async (m, { conn }) => {
     const userId = m.sender;
     const now = Date.now();
 
-    if (cooldowns[userId] && now < cooldowns[userId]) {
-        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-        return await conn.reply(
-            m.chat,
-            `💅 Relájate corazón, aún debes esperar *${minutes}m ${seconds}s* para otro rollito sensual. #rw`,
-            m
-        );
+    // ⏳ Solo aplica cooldown si NO es el número premium
+    if (userId !== premiumUser) {
+        if (cooldowns[userId] && now < cooldowns[userId]) {
+            const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            return await conn.reply(
+                m.chat,
+                `💅 Relájate corazón, aún debes esperar *${minutes}m ${seconds}s* para otro rollito sensual. #rw`,
+                m
+            );
+        }
     }
 
     try {
@@ -84,7 +90,10 @@ let handler = async (m, { conn }) => {
             mentions
         });
 
-        cooldowns[userId] = now + 15 * 60 * 1000;
+        // ⏳ Solo guarda cooldown si NO es premium
+        if (userId !== premiumUser) {
+            cooldowns[userId] = now + 15 * 60 * 1000;
+        }
 
     } catch (error) {
         await conn.reply(m.chat, `🚨 Algo falló, drama incoming: ${error.message}`, m);
