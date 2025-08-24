@@ -1,6 +1,8 @@
 import { promises as fs } from 'fs';
 
 const charactersFilePath = './src/database/characters.json';
+const haremFilePath = './src/database/harem.json';
+
 const cooldowns = {};
 
 async function loadCharacters() {
@@ -8,7 +10,7 @@ async function loadCharacters() {
         const data = await fs.readFile(charactersFilePath, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
-        throw new Error('💋 No pude leer el archivo de waifus, nene.');
+        throw new Error('❀ No se pudo cargar el archivo characters.json.');
     }
 }
 
@@ -16,7 +18,7 @@ async function saveCharacters(characters) {
     try {
         await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
     } catch (error) {
-        throw new Error('💅 No pude guardar los datos, algo se me cayó del tacón.');
+        throw new Error('❀ No se pudo guardar el archivo characters.json.');
     }
 }
 
@@ -28,55 +30,59 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
-        return await conn.reply(
-            m.chat,
-            `👠 Tranquilo, perrito caliente 🐕‍🔥\nDebes esperar *${minutes}m ${seconds}s* para volver a *reclamar a una waifu* 😈`,
-            m
-        );
+        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para volver a reclamar.`, m);
     }
 
-    if (m.quoted && m.quoted.sender === conn.user.jid) {
+    if (m.quoted && m.quoted.text) {
         try {
             const characters = await loadCharacters();
             const characterIdMatch = m.quoted.text.match(/✦ ID: \*(.+?)\*/);
 
             if (!characterIdMatch) {
-                return conn.reply(m.chat, '😒 ¿Y esa cita qué? No le veo ID válido, bebé.', m);
+                await conn.reply(m.chat, '《✧》No se pudo encontrar el ID del personaje en el mensaje citado.', m);
+                return;
             }
 
             const characterId = characterIdMatch[1];
             const character = characters.find(c => c.id === characterId);
 
             if (!character) {
-                return conn.reply(m.chat, '👀 Esa waifu ya se escapó del catálogo, intenta con otra, sexy.', m);
+                await conn.reply(m.chat, '《✧》El mensaje citado no es un personaje válido.', m);
+                return;
             }
 
             if (character.user && character.user !== userId) {
-                return conn.reply(
+                await conn.reply(
                     m.chat,
-                    `💔 Ayyy no, esta ya fue *reclamada* por @${character.user.split('@')[0]}... Busca otra calentura 😘`,
+                    `《✧》El personaje *${character.name}* ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`,
                     m,
                     { mentions: [character.user] }
                 );
+                return;
             }
 
             character.user = userId;
-            character.status = '🔥 Reclamada por un papi 🔥';
+            character.status = "Reclamado";
 
             await saveCharacters(characters);
 
             await conn.reply(
                 m.chat,
-                `💘 *${character.name}* ahora es *tuyita*, suertudo 🫦\n\n💋 Cuídala bien o te la quito~`,
+                `╔═══════ • ° ❁⊕❁ ° • ═══════╗\n` +
+                `⟢ ✦ ¡Reclamo exitoso! ✦\n` +
+                `┃ Has reclamado a *${character.name}* como tu waifu 💖\n` +
+                `╚═══════ • ° ❁⊕❁ ° • ═══════╝`,
                 m
             );
 
-            cooldowns[userId] = now + 30 * 60 * 1000;
+            cooldowns[userId] = now + 30 * 60 * 1000; // 30 minutos
+
         } catch (error) {
-            await conn.reply(m.chat, `🚨 Ocurrió un drama: ${error.message}`, m);
+            await conn.reply(m.chat, `✘ Error al reclamar el personaje: ${error.message}`, m);
         }
+
     } else {
-        await conn.reply(m.chat, '😤 Oye, tienes que *citar a una waifu* si la quieres reclamar, bruto.', m);
+        await conn.reply(m.chat, '《✧》Debes citar un personaje válido para reclamar.', m);
     }
 };
 
