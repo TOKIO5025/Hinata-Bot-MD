@@ -77,4 +77,3 @@ handler.command = ['harem', 'claims', 'waifus']
 handler.group = true
 
 export default handler
-                                  
