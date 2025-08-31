@@ -100,9 +100,9 @@ let handler = async (m, { conn }) => {
     }
 };
 
-handler.help = ['ver', 'rw', 'rollwaifu'];
+handler.help = ['biscar', 'rw', 'rollwaifu'];
 handler.tags = ['gacha'];
-handler.command = ['ver', 'rw', 'rollwaifu'];
+handler.command = ['buscar', 'rw', 'rollwaifu'];
 handler.group = true;
 
 export default handler;
