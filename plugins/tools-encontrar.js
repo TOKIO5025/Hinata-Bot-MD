@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import archiver from 'archiver' // npm i archiver
 
-// Función para crear el ZIP
+// Función para crear ZIP
 async function createZip(filePath, outputPath) {
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(outputPath)
@@ -19,17 +19,17 @@ async function createZip(filePath, outputPath) {
 
 const handler = async (m, { args, usedPrefix, command, conn }) => {
   const fileName = args[0]
-  if (!fileName) throw `✳️ Usa el comando así:\n${usedPrefix + command} <nombre-del-comando-sin-.js>\n\nEjemplo:\n${usedPrefix + command} descargas-apk`
+  if (!fileName) throw `✨ Usa el comando así mi ciela:\n${usedPrefix + command} <nombre-del-comando-sin-.js>\n\n💖 Ejemplo:\n${usedPrefix + command} descargas-apk`
 
   const filePath = path.join('./plugins', `${fileName}.js`)
-  if (!fs.existsSync(filePath)) throw `❌ No se encontró el archivo *${fileName}.js* en la carpeta plugins.`
+  if (!fs.existsSync(filePath)) throw `❌ No encontré el archivo *${fileName}.js* en la carpeta plugins, bb ✨`
 
   const code = fs.readFileSync(filePath, 'utf-8')
 
   if (code.length > 4000) {
-    // Aviso cuando es muy largo
+    // Aviso coqueto cuando es muy largo
     const msg = await conn.sendMessage(m.chat, {
-      text: `⚠️ El archivo *${fileName}.js* es muy largo para enviarlo aquí.\n\n📦 Reacciona para elegir:\n\n🐉 ZIP\n🐲 Documento`,
+      text: `💌 El archivo *${fileName}.js* es demasiado largo para mandártelo así, cosita.\n\nElige cómo lo quieres:\n\n🐉 En versión *ZIP* (bien guardadito)\n🐲 En *Documento* (para leerlo rico)\n\n✨ Reacciona con el emoji que prefieras ✨`,
       quoted: m
     })
 
@@ -43,7 +43,7 @@ const handler = async (m, { args, usedPrefix, command, conn }) => {
     return
   }
 
-  await m.reply(`📂 Aquí tienes el código de *${fileName}.js*:\n\n` + '```js\n' + code + '\n```')
+  await m.reply(`📂 Aquí tienes el código de *${fileName}.js*, amor:\n\n` + '```js\n' + code + '\n```')
 }
 
 // Escucha reacciones y responde con zip o txt
@@ -64,7 +64,8 @@ handler.all = async function (m, { conn }) {
     await conn.sendMessage(chat, {
       document: { url: zipPath },
       mimetype: 'application/zip',
-      fileName: `${fileName}.zip`
+      fileName: `${fileName}.zip`,
+      caption: `🐉 Aquí está tu *${fileName}.js* en formato ZIP, mi ciela 💕`
     })
     fs.unlinkSync(zipPath)
   }
@@ -75,7 +76,8 @@ handler.all = async function (m, { conn }) {
     await conn.sendMessage(chat, {
       document: { url: txtPath },
       mimetype: 'text/plain',
-      fileName: `${fileName}.txt`
+      fileName: `${fileName}.txt`,
+      caption: `🐲 Aquí tienes tu archivo *${fileName}.js* en documento, cosita linda ✨`
     })
     fs.unlinkSync(txtPath)
   }
