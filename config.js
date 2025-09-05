@@ -35,7 +35,7 @@ global.isBaileysFail = false
 
 //---------[ APIS GLOBAL ]---------
 
-global.openai_key = 'sk-...OzYy' /* Consigue tu ApiKey en este enlace: https://platform.openai.com/account/api-keys */
+global.openai_key = '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' /* Consigue tu ApiKey en este enlace: https://platform.openai.com/account/api-keys */
 global.openai_org_id = 'HITjoN7H8pCwoncEB9e3fSyW' /* Consigue tu ID de organizacion en este enlace: https://platform.openai.com/account/org-settings */
 global.Key360 = ['964f-0c75-7afc']//key de violetics
 global.keysZens = ['LuOlangNgentot', 'c2459db922', '37CC845916', '6fb0eff124', 'hdiiofficial', 'fiktod', 'BF39D349845E', '675e34de8a', '0b917b905e6f']
