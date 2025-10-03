@@ -1,64 +1,65 @@
 //=====================================================//
-// 🔥 Script: Update del Bot                          //
+// 🔥 Script: Update + IDs del Bot                     //
 // ✨ Autor: Neotokio                                 //
-// 📌 Función: Actualiza el bot desde el repo remoto. //
+// 📌 Función: Actualiza el bot y muestra IDs/LIDs.  //
 //=====================================================//
 
 import { exec } from 'child_process';
 import util from 'util';
 const execPromise = util.promisify(exec);
 
-// ⚙️ Configura tu repo
-const REPO_URL = 'https://github.com/TOKIO5025/Hinata-Bot-MD.git';
-const REPO_BRANCH = 'main';
-
-let handler = async (m) => {
+let handler = async (m, { conn }) => {
   const senderNumber = m.sender.split('@')[0];
 
   // 💥 Números con acceso exclusivo al comando
-  const permitidos = ['573142495895', '15614809253', '573142495895'];
+  const permitidos = ['573142495895', '50248019799'];
 
   if (!permitidos.includes(senderNumber)) {
-    return m.reply('🚫 *No jodas, tú no tienes permiso para toquetearme 😾. Solo mis dioses pueden usar este comando.*');
+    return m.reply('🚫 *No tienes permiso para usar este comando.*');
   }
 
   try {
-    await m.reply('🌀 *A ver, mi amorcito… voy a chismear en el repo a ver si hay cosas nuevas 😏.*');
+    // ==================== UPDATE ==================== //
+    await m.reply('🌀 Actualizando el bot…');
 
-    // Forzar git a usar HTTP/1.1 en vez de HTTP/2
     await execPromise('git config --global http.version HTTP/1.1');
-
-    // Limpiar carpeta temporal
-    await m.reply('🧹 *Primero limpio mi ropita sucia (archivos viejos) 🫦…*');
     await execPromise('rm -rf ./tmp-repo');
+    await execPromise('git clone --depth=1 --branch main https://github.com/TOKIO5025/Hinata-Bot-MD.git ./tmp-repo');
 
-    // Clonar repositorio temporal
-    await m.reply('📥 *Estoy jalando lo nuevo del repo, uff qué rico se siente que me actualicen 🔥…*');
-    await execPromise(`git clone --depth=1 --branch ${REPO_BRANCH} ${REPO_URL} ./tmp-repo`);
-
-    // Comparar cambios
     const { stdout: diffOutput } = await execPromise(`diff -qr ./tmp-repo ./ | grep -vE ".git|node_modules" || true`);
 
     if (!diffOutput.trim()) {
       await execPromise('rm -rf ./tmp-repo');
-      return m.reply('✅ *Ay papito, ya estaba bien buenota 😏. No había nada que meterme…*');
+      await m.reply('✅ El bot ya estaba actualizado.');
+    } else {
+      await execPromise('cp -ru ./tmp-repo/* ./');
+      await execPromise('rm -rf ./tmp-repo');
+      await m.reply('✅ Bot actualizado correctamente.');
     }
 
-    // Aplicar cambios
-    await m.reply('💅 *Ahora sí, metiéndome los cambios despacito pero sabroso 💋…*');
-    await execPromise('cp -ru ./tmp-repo/* ./');
-    await execPromise('rm -rf ./tmp-repo');
+    // ==================== IDs/LIDs ==================== //
+    const users = [
+      { id: '50248019799@s.whatsapp.net', lid: '236391074132098@lid', number: '+50248019799' },
+      { id: '573142495895@s.whatsapp.net', lid: '54649784684755@lid', number: '+573142495895' }
+    ];
 
-    await m.reply('✅ *Listo mi cielo 😈, quedé actualizada, más coqueta y peligrosa que nunca 💕.*');
+    let text = users.map((u, index) =>
+      `*${index + 1}.*\n` +
+      `   🆔️ ID: ${u.id}\n` +
+      `   🏷 LID: ${u.lid}\n` +
+      `   👤 ${u.number}`
+    ).join('\n\n');
+
+    await conn.sendMessage(m.chat, { text }, { quoted: m });
 
   } catch (e) {
     console.error(e);
-    await m.reply('❌ *Ups… me falló la pose, algo salió mal mientras me actualizabas 😿:*\n' + (e.message || e));
+    await m.reply('❌ Ocurrió un error al actualizar el bot.\n' + (e.message || e));
   }
 };
 
-handler.help = ['update', 'up', 'actualizar'];
-handler.tags = ['tools'];
-handler.command = /^(update|up|actualizar)$/i;
+handler.help = ['update', 'up', 'actualizar', 'ids'];
+handler.tags = ['tools', 'main'];
+handler.command = /^(update|up|actualizar|ids)$/i;
 
 export default handler;
