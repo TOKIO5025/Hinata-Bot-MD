@@ -26,37 +26,34 @@ let tags = {
 }
 
 const defaultMenu = {
-  before: `🍑 *Bienvenido al mundo sensual y peligroso de 𝙃𝙞𝙣𝙖𝙩𝙖 𝙎𝙃𝙄𝙉𝙊𝘽𝙄...* 💋
-👑 Soy tu diosa virtual, ¿quieres que te castigue con mis comandos traviesos?
+  before: `
+🌸 ʜᴏʟᴀ ᴍɪ ᴀᴍᴏʀ ✨  
+Bienvenido al mundo 🔥 *Hinata Shinobi* 🔥  
+Prepárate que aquí mando yo 😏💋  
 
-✨ ᴜꜱᴜᴀʀɪᴏ: %name
-🔮 ɴɪᴠᴇʟ: %level | ⚡ ᴇxᴘ: %exp / %maxexp
-📋 ʀᴇɢɪꜱᴛʀᴏꜱ: %totalreg
-💖 ᴇꜱᴛᴀᴅᴏ: ᴏɴʟɪɴᴇ
-⏳ ᴛɪᴇᴍᴘᴏ ᴀᴄᴛɪᴠᴏ: %muptime
+👤 ᴜꜱᴜᴀʀɪᴏ: %name  
+🔮 ɴɪᴠᴇʟ: %level | ⚡ XP: %exp / %maxexp  
+📊 ʀᴇɢɪꜱᴛʀᴏꜱ: %totalreg  
+⏳ ᴀᴄᴛɪᴠᴏ: %muptime  
 
-─────── 𝐌𝐄𝐍𝐔 𝐇𝐈𝐍𝐀𝐓𝐀 𝙎𝙃𝙄𝙉𝙊𝘽𝙄 ───────
-🔞 *Mis comandos están tan calientes que te harán sudar...*
-¿Te atreves a probarlos, papito? 😈🔥
+━━━━━━━ 💎 ━━━━━━━
 %readmore`.trim(),
 
-  header: '\n╭━━〔 💋 %category 〕━━⬣',
-  body: '│ ➤ %cmd\n',
-  footer: '╰━━━━━━━━━━━━⬣',
-  after: `\n💋 *Menú ejecutado, mi amor...*\n_¿Quieres más poder? Solo susúrrame y yo lo haré 😏_`
+  header: '\n╭─〔 💋 %category 〕─✦',
+  body: '│ ✧ %cmd',
+  footer: '╰───────────────✦',
+  after: `\n💖 ᴍᴇɴᴜ ᴇɴᴠɪᴀᴅᴏ ᴍɪ ᴀᴍᴏʀ...  
+_¿Qᴜɪᴇʀᴇs ᴠᴇʀ ᴍᴀ́s ᴛʀᴀᴠᴇꜱᴜʀᴀꜱ? 😈_`
 }
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
   try {
-    // Reacción rápida antes de procesar
-    await m.react('🕑')
+    await m.react('🌸')
 
-    // Obtener información del usuario de la base de datos
     let { exp, level } = global.db.data.users[m.sender] || {}
-    if (!exp || !level) {
-      // Si no se encuentra la información del usuario, asignar valores predeterminados
-      exp = 0
-      level = 1
+    if (!exp || !level) {  
+      exp = 0  
+      level = 1  
     }
 
     let { min, xp, max } = xpRange(level, global.multiplier)
@@ -74,8 +71,8 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       enabled: !p.disabled
     }))
 
-    for (let plugin of help) {
-      for (let t of plugin.tags) {
+    for (let plugin of help) {  
+      for (let t of plugin.tags) {  
         if (!(t in tags) && t) tags[t] = textHinata(t)
       }
     }
@@ -105,29 +102,37 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       readmore: String.fromCharCode(8206).repeat(4001)
     }
 
-    let text = _text.replace(/%(\w+)/g, (_, key) => replace[key] || '')
+    let menuText = _text.replace(/%(\w+)/g, (_, key) => replace[key] || '')
 
-    const videos = [
-      'https://files.cloudkuimages.guru/images/dQwgPEAt.jpg',
-      'https://files.cloudkuimages.guru/images/zQdRjSX7.jpg',
-      'https://files.cloudkuimages.guru/images/MxFaAos6.jpg',
-      'https://files.cloudkuimages.guru/images/GzXbIfWA.jpg',
-      'https://files.cloudkuimages.guru/images/N1BYGRr2.jpg'
+    // 🎨 Imagenes nuevas estilo anime/pro
+    const images = [
+      'https://raw.githubusercontent.com/TOKIO5025/Audios/main/Hinata.jpg',
+      'https://raw.githubusercontent.com/TOKIO5025/Audios/main/Hinata-Bot.jpg',
+      'https://raw.githubusercontent.com/TOKIO5025/Audios/main/Hinata-Bot-ultra.jpg',
+      'https://raw.githubusercontent.com/TOKIO5025/Audios/main/Hinata-B.jpg',
+      'https://raw.githubusercontent.com/TOKIO5025/Audios/main/Hinata-neo.jpg'
     ]
-    const selected = videos[Math.floor(Math.random() * videos.length)]
+    const selectedImage = images[Math.floor(Math.random() * images.length)]
 
-    // Enviar el archivo y el texto
-    await conn.sendFile(m.chat, selected, 'hinata-menu.mp4', text, m)
+    await conn.sendMessage(m.chat, {
+      image: { url: selectedImage },
+      caption: menuText,
+      contextInfo: {
+        externalAdReply: {
+          title: '🌸 𝐇𝐢𝐧𝐚𝐭𝐚 𝐒𝐡𝐢𝐧𝐨𝐛𝐢',
+          body: '🐉 Dev by NeoTokyo Beats',
+          thumbnailUrl: selectedImage,
+          sourceUrl: 'https://whatsapp.com/channel/0029Vaqe1Iv65yDAKBYr6z0A',
+          mediaType: 1,
+          renderLargerThumbnail: true
+        }
+      }
+    }, { quoted: m })
 
   } catch (e) {
     console.error(e)
-    conn.reply(m.chat, `❎ *Ups... fallé como tu diosa Shinobi 💔 Hinata necesita mimos.*
-
-🔴 *Error detectado:*
-\`\`\`
-${e.message}
-\`\`\`
-`, m)
+    conn.reply(m.chat, `💔 Fallé como tu diosa Shinobi...  
+\`\`\`${e.message}\`\`\``, m)
   }
 }
 
@@ -142,4 +147,4 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, '0')).join(':')
-  }
+}
